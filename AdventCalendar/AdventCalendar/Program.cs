@@ -268,7 +268,14 @@ namespace AdventCalendar
         }
 
         /* Day 5
+         * problem 1:
+         * given a list of numbers, each line is a jump count
+         * jump forward or negative by the count
+         * after a jump increment that number by 1
+         * count how long it takes to fall off end of list
          * 
+         * problem 2:
+         * same thing, but decrease the number if the value is >= 3
          */
         static void Problem5(string __input)
         {
