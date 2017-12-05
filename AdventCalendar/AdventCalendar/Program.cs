@@ -15,7 +15,7 @@ namespace AdventCalendar
             Problem2(@"..\..\problem2.txt");
             Problem3("347991");
             Problem4(@"..\..\problem4.txt");
-            Problem5();
+            Problem5(@"..\..\problem5.txt");
             //Problem6();
             //Problem7();
             //Problem8();
@@ -270,10 +270,38 @@ namespace AdventCalendar
         /* Day 5
          * 
          */
-        static void Problem5()
+        static void Problem5(string __input)
         {
-            Console.WriteLine("Day 5, Problem 1: ");
-            Console.WriteLine("Day 5, Problem 2: ");
+            var lines = File.ReadLines(__input);
+            List<int> jumps = new List<int>();
+            foreach (string line in lines)
+                jumps.Add(int.Parse(line));
+            int steps = 0, steps2 = 0;
+            int pos = 0;
+            while (pos < jumps.Count)
+            {
+                var old_pos = pos;
+                pos += jumps[pos];
+                jumps[old_pos] += 1;
+                steps++;
+            }
+            jumps.Clear();
+            foreach (string line in lines)
+                jumps.Add(int.Parse(line));
+            pos = 0;
+            while (pos < jumps.Count)
+            {
+                var old_pos = pos;
+                pos += jumps[pos];
+                if (jumps[old_pos] >= 3)
+                    jumps[old_pos] -= 1;
+                else
+                    jumps[old_pos] += 1;
+                steps2++;
+            }
+
+            Console.WriteLine("Day 5, Problem 1: " + steps);
+            Console.WriteLine("Day 5, Problem 2: " + steps2);
         }
 
         /* Day 6
