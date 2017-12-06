@@ -49,9 +49,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="problem1.txt" />
+    <Content Include="problem3.txt" />
     <Content Include="problem2.txt" />
     <Content Include="problem4.txt" />
     <Content Include="problem5.txt" />
+    <Content Include="problem6.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
