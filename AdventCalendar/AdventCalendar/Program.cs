@@ -457,11 +457,7 @@ namespace AdventCalendar
                 rtotal_weights.Add(name, weight);
                 return weight;
             }
-
         }
-
-        
-
 
         /* Day 8
         * 
