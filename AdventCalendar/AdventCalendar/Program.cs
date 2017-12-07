@@ -314,11 +314,13 @@ namespace AdventCalendar
         }
 
         /* Day 6
+         * problem 1:
          * file is an array of numbers, blocks 
          * find largest number, first wins ties
          * set to 0, redistribute to blocks by adding 1 to each sequential block
          * how many unique states before finding one seen before
          * 
+         * problem 2:
          * continue on, what is length of this cycle
          */
         static void Problem6(string __input)
@@ -331,7 +333,7 @@ namespace AdventCalendar
             Dictionary<string, string> mem = new Dictionary<string, string>();
             string config = "";
             foreach (int m in blocks)
-                config += m.ToString()+ " ";
+                config += m.ToString() + " ";
             mem.Add(config, null);
             bool start = false;
             int ans1 = 0;
@@ -365,7 +367,7 @@ namespace AdventCalendar
                     }
                     else
                         break;
-                }                    
+                }
                 mem.Add(config, null);
             }
             Console.WriteLine("Day 6, Problem 1: " + ans1);
@@ -374,17 +376,96 @@ namespace AdventCalendar
 
 
         /* Day 7
+         * problem 1:
+         * create a tree structure from the file, find the root.
          * 
+         * problem 2:
+         * each node needs children with equal total weight
+         * one node is wrong weight
+         * what should its weight be?
          */
         static void Problem7()
         {
-            Console.WriteLine("Day 7, Problem 1: ");
-            Console.WriteLine("Day 7, Problem 2: ");
+            var lines = File.ReadAllLines(@"../../problem7.txt");
+            char[] delims = { '(', ')', '-', '>', ',', ' ' };
+            Dictionary<string, int> weights = new Dictionary<string, int>();
+            SortedList<string, int> total_weights = new SortedList<string, int>();
+            Dictionary<string, List<string>> tree = new Dictionary<string, List<string>>();
+            Dictionary<string, int> ischild = new Dictionary<string, int>();
+            string root = "";
+            foreach (string line in lines)
+            {
+                string[] nodes = line.Split(delims, StringSplitOptions.RemoveEmptyEntries);
+                weights.Add(nodes[0], int.Parse(nodes[1]));
+                ischild.Add(nodes[0], 0);
+                List<string> childs = new List<string>();
+                for (int i = 2; i < nodes.Length; i++)
+                    childs.Add(nodes[i]);
+                tree.Add(nodes[0], childs);
+            }
+            foreach (KeyValuePair<string, List<string>> e in tree)
+            {
+                List<string> children = e.Value;
+                foreach (string c in children)
+                {
+                    ischild[c] = 1;
+                }
+            }
+            foreach (KeyValuePair<string, int> e in ischild)
+            {
+                if (e.Value != 1)
+                {
+                    root = e.Key;
+                    break;
+                }
+            }
+            GetWeight(ref tree, ref weights, ref total_weights, root);
+            total_weights.OrderBy(k => k.Key);
+            string curr_node = root;
+            int good_weight = 0;
+            while (true)
+            {
+                List<Tuple<string, int>> list = new List<Tuple<string, int>>();
+                foreach (string child in tree[curr_node])
+                {
+                    list.Add(new Tuple<string, int>(child, total_weights[child]));
+                }
+                list.Sort((x, y) => x.Item2.CompareTo(y.Item2));
+                if (list[0].Item2 != list[1].Item2)
+                {
+                    good_weight = list[0].Item2;
+                    curr_node = list[0].Item1;
+                }
+                else if (list[list.Count - 1].Item2 != list[list.Count - 2].Item2)
+                {
+                    good_weight = list[0].Item2;
+                    curr_node = list[list.Count - 1].Item1;
+                }
+                else
+                    break;
+            }
+            int suggest = weights[curr_node] - ((total_weights[curr_node] - good_weight) > 0 ? (total_weights[curr_node] - good_weight) : (-good_weight - total_weights[curr_node]));
+            Console.WriteLine("Day 7, Problem 1: " + root);
+            Console.WriteLine("Day 7, Problem 2: " + suggest);
+
+            int GetWeight(ref Dictionary<string, List<string>> rtree, ref Dictionary<string, int> rweights, ref SortedList<string, int> rtotal_weights, string name)
+            {
+                int weight = 0;
+                weight += rweights[name];
+                foreach (string child in rtree[name])
+                    weight += GetWeight(ref rtree, ref rweights, ref rtotal_weights, child);
+                rtotal_weights.Add(name, weight);
+                return weight;
+            }
+
         }
 
+        
+
+
         /* Day 8
-         * 
-         */
+        * 
+        */
         static void Problem8()
         {
             Console.WriteLine("Day 8, Problem 1: ");
