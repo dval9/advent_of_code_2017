@@ -18,8 +18,8 @@ namespace AdventCalendar
             Problem5(@"..\..\problem5.txt");
             Problem6(@"..\..\problem6.txt");
             Problem7();
-            //Problem8();
-            //Problem9();
+            Problem8();
+            Problem9();
             //Problem11();
             //Problem12();
             //Problem13();
@@ -337,7 +337,7 @@ namespace AdventCalendar
             mem.Add(config, null);
             bool start = false;
             int ans1 = 0;
-            for (; ; )
+            for (;;)
             {
                 config = "";
                 int max = 0;
@@ -460,12 +460,156 @@ namespace AdventCalendar
         }
 
         /* Day 8
+        * problem 1:
+        * given list of instructions
+        * preform operation to regester
+        * find largest value stored in a register
         * 
+        * problem 2:
+        * what was the largest value ever held in a register
         */
         static void Problem8()
         {
-            Console.WriteLine("Day 8, Problem 1: ");
-            Console.WriteLine("Day 8, Problem 2: ");
+            var lines = File.ReadAllLines(@"../../problem8.txt");
+            Dictionary<string, int> reg = new Dictionary<string, int>();
+            char[] delims = { ' ' };
+            int largest_ever = 0;
+            foreach (string instruct in lines)
+            {
+                string[] i = instruct.Split(delims, StringSplitOptions.RemoveEmptyEntries);
+                if (!reg.ContainsKey(i[0]))
+                    reg.Add(i[0], 0);
+            }
+            foreach (string instruct in lines)
+            {
+                string[] i = instruct.Split(delims, StringSplitOptions.RemoveEmptyEntries);
+                bool cond;
+                switch (i[5])
+                {
+                    case "<":
+                        cond = (reg[i[4]] < int.Parse(i[6]));
+                        if (cond)
+                        {
+                            switch (i[1])
+                            {
+                                case "inc":
+                                    reg[i[0]] += int.Parse(i[2]);
+                                    if (reg[i[0]] > largest_ever)
+                                        largest_ever = reg[i[0]];
+                                    break;
+                                case "dec":
+                                    reg[i[0]] -= int.Parse(i[2]);
+                                    if (reg[i[0]] > largest_ever)
+                                        largest_ever = reg[i[0]];
+                                    break;
+                            }
+                        }
+                        break;
+                    case ">":
+                        cond = (reg[i[4]] > int.Parse(i[6]));
+                        if (cond)
+                        {
+                            switch (i[1])
+                            {
+                                case "inc":
+                                    reg[i[0]] += int.Parse(i[2]);
+                                    if (reg[i[0]] > largest_ever)
+                                        largest_ever = reg[i[0]];
+                                    break;
+                                case "dec":
+                                    reg[i[0]] -= int.Parse(i[2]);
+                                    if (reg[i[0]] > largest_ever)
+                                        largest_ever = reg[i[0]];
+                                    break;
+                            }
+                        }
+                        break;
+                    case ">=":
+                        cond = (reg[i[4]] >= int.Parse(i[6]));
+                        if (cond)
+                        {
+                            switch (i[1])
+                            {
+                                case "inc":
+                                    reg[i[0]] += int.Parse(i[2]);
+                                    if (reg[i[0]] > largest_ever)
+                                        largest_ever = reg[i[0]];
+                                    break;
+                                case "dec":
+                                    reg[i[0]] -= int.Parse(i[2]);
+                                    if (reg[i[0]] > largest_ever)
+                                        largest_ever = reg[i[0]];
+                                    break;
+                            }
+                        }
+                        break;
+                    case "<=":
+                        cond = (reg[i[4]] <= int.Parse(i[6]));
+                        if (cond)
+                        {
+                            switch (i[1])
+                            {
+                                case "inc":
+                                    reg[i[0]] += int.Parse(i[2]);
+                                    if (reg[i[0]] > largest_ever)
+                                        largest_ever = reg[i[0]];
+                                    break;
+                                case "dec":
+                                    reg[i[0]] -= int.Parse(i[2]);
+                                    if (reg[i[0]] > largest_ever)
+                                        largest_ever = reg[i[0]];
+                                    break;
+                            }
+                        }
+                        break;
+                    case "==":
+                        cond = (reg[i[4]] == int.Parse(i[6]));
+                        if (cond)
+                        {
+                            switch (i[1])
+                            {
+                                case "inc":
+                                    reg[i[0]] += int.Parse(i[2]);
+                                    if (reg[i[0]] > largest_ever)
+                                        largest_ever = reg[i[0]];
+                                    break;
+                                case "dec":
+                                    reg[i[0]] -= int.Parse(i[2]);
+                                    if (reg[i[0]] > largest_ever)
+                                        largest_ever = reg[i[0]];
+                                    break;
+                            }
+                        }
+                        break;
+                    case "!=":
+                        cond = (reg[i[4]] != int.Parse(i[6]));
+                        if (cond)
+                        {
+                            switch (i[1])
+                            {
+                                case "inc":
+                                    reg[i[0]] += int.Parse(i[2]);
+                                    if (reg[i[0]] > largest_ever)
+                                        largest_ever = reg[i[0]];
+                                    break;
+                                case "dec":
+                                    reg[i[0]] -= int.Parse(i[2]);
+                                    if (reg[i[0]] > largest_ever)
+                                        largest_ever = reg[i[0]];
+                                    break;
+                            }
+                        }
+                        break;
+                }
+            }
+            int largest = 0;
+            foreach (var kvp in reg)
+            {
+                if (kvp.Value > largest)
+                    largest = kvp.Value;
+            }
+            Console.WriteLine("Day 8, Problem 1: " + largest);
+            Console.WriteLine("Day 8, Problem 2: "+largest_ever);
         }
 
         /* Day 9
