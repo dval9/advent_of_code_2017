@@ -17,9 +17,9 @@ namespace AdventCalendar
             Problem4(@"..\..\problem4.txt");
             Problem5(@"..\..\problem5.txt");
             Problem6(@"..\..\problem6.txt");
-            Problem7();
-            Problem8();
-            Problem9();
+            Problem7(@"..\..\problem7.txt");
+            Problem8(@"../../problem8.txt");
+            Problem9(@"..\..\problem9.txt");
             //Problem11();
             //Problem12();
             //Problem13();
@@ -337,7 +337,7 @@ namespace AdventCalendar
             mem.Add(config, null);
             bool start = false;
             int ans1 = 0;
-            for (;;)
+            for (; ; )
             {
                 config = "";
                 int max = 0;
@@ -384,9 +384,9 @@ namespace AdventCalendar
          * one node is wrong weight
          * what should its weight be?
          */
-        static void Problem7()
+        static void Problem7(string __input)
         {
-            var lines = File.ReadAllLines(@"../../problem7.txt");
+            var lines = File.ReadAllLines(__input);
             char[] delims = { '(', ')', '-', '>', ',', ' ' };
             Dictionary<string, int> weights = new Dictionary<string, int>();
             SortedList<string, int> total_weights = new SortedList<string, int>();
@@ -468,9 +468,9 @@ namespace AdventCalendar
         * problem 2:
         * what was the largest value ever held in a register
         */
-        static void Problem8()
+        static void Problem8(string __input)
         {
-            var lines = File.ReadAllLines(@"../../problem8.txt");
+            var lines = File.ReadAllLines(__input);
             Dictionary<string, int> reg = new Dictionary<string, int>();
             char[] delims = { ' ' };
             int largest_ever = 0;
@@ -609,16 +609,55 @@ namespace AdventCalendar
                     largest = kvp.Value;
             }
             Console.WriteLine("Day 8, Problem 1: " + largest);
-            Console.WriteLine("Day 8, Problem 2: "+largest_ever);
+            Console.WriteLine("Day 8, Problem 2: " + largest_ever);
         }
 
         /* Day 9
+         * problem 1:
+         * parse string to find groups
+         * find total sum of score of groups
+         * each level of nesting = 1
+         * i.e. {} = 1, {{}} = 1 + 2 = 3
          * 
+         * problem 2:
+         * garbage strings are <>
+         * characters canceled with !
+         * find non canceled garbage character count
          */
-        static void Problem9()
+        static void Problem9(string __input)
         {
-            Console.WriteLine("Day 9, Problem 1: ");
-            Console.WriteLine("Day 9, Problem 2: ");
+            string lines = File.ReadAllText(__input).Trim();
+            lines = lines.Replace("\r\n", string.Empty);
+            Stack<char> s = new Stack<char>();
+            int score = 0;
+            int non_garbage = 0;
+            s.Push(lines[0]);
+            for (int i = 1; i < lines.Length; i++)
+            {
+                if (s.Peek().Equals('{'))
+                {
+                    if (lines[i].Equals('{'))
+                        s.Push(lines[i]);
+                    else if (lines[i].Equals('<'))
+                        s.Push(lines[i]);
+                    else if (lines[i].Equals('}'))
+                    {
+                        score += s.Count;
+                        s.Pop();
+                    }
+                }
+                else if (s.Peek().Equals('<'))
+                {
+                    if (lines[i].Equals('!'))
+                        i++;
+                    else if (lines[i].Equals('>'))
+                        s.Pop();
+                    else
+                        non_garbage++;
+                }
+            }
+            Console.WriteLine("Day 9, Problem 1: " + score);
+            Console.WriteLine("Day 9, Problem 2: " + non_garbage);
         }
 
         /* Day 10
