@@ -20,6 +20,7 @@ namespace AdventCalendar
             Problem7(@"..\..\problem7.txt");
             Problem8(@"../../problem8.txt");
             Problem9(@"..\..\problem9.txt");
+            Problem10(@"..\..\problem10.txt");
             //Problem11();
             //Problem12();
             //Problem13();
@@ -374,7 +375,6 @@ namespace AdventCalendar
             Console.WriteLine("Day 6, Problem 2: " + mem.Keys.Count);
         }
 
-
         /* Day 7
          * problem 1:
          * create a tree structure from the file, find the root.
@@ -661,12 +661,103 @@ namespace AdventCalendar
         }
 
         /* Day 10
+         * problem 1:
+         * create hash function
+         * take list of ints 0..255
+         * for each length in input, reverse that many from current pos
+         * move position forward, list should be circular
          * 
+         * problem 2:
+         * take input lengths as ascii bytes
+         * perform perm 64 times
+         * xor 16 lengths blocks together
+         * output is hex encoded
          */
-        static void Problem10()
+        static void Problem10(string __input)
         {
-            Console.WriteLine("Day 10, Problem 1: ");
-            Console.WriteLine("Day 10, Problem 2: ");
+            string lines = File.ReadAllText(__input).Trim();
+            List<int> str = new List<int>();
+            int pos = 0;
+            int skip = 0;
+            for (int i = 0; i < 256; i++)
+                str.Add(i);
+            char[] delims = { ',' };
+            string[] lengths = lines.Split(delims, StringSplitOptions.RemoveEmptyEntries);
+            //lengths = new string[] { "3", "4", "1", "5" };
+            for (int i = 0; i < lengths.Length; i++)
+            {
+                if (pos + int.Parse(lengths[i]) > str.Count)
+                {
+                    int end = str.Count - pos;
+                    int rem = int.Parse(lengths[i]) - end;
+                    List<int> temp = new List<int>();
+                    temp.AddRange(str.GetRange(pos, end));
+                    temp.AddRange(str.GetRange(0, rem));
+                    temp.Reverse();
+                    str.RemoveRange(pos, end);
+                    str.RemoveRange(0, rem);
+                    str.AddRange(temp.GetRange(0, end));
+                    str.InsertRange(0, temp.GetRange(end, rem));
+                }
+                else
+                    str.Reverse(pos, int.Parse(lengths[i]));
+                pos = (pos + int.Parse(lengths[i]) + skip) % str.Count;
+                skip++;
+            }
+            int result = str[0] * str[1];
+            //lines = "";
+            List<byte> input = Encoding.ASCII.GetBytes(lines).ToList();
+            input.Add(Convert.ToByte(17));
+            input.Add(Convert.ToByte(31));
+            input.Add(Convert.ToByte(73));
+            input.Add(Convert.ToByte(47));
+            input.Add(Convert.ToByte(23));
+            str.Clear();
+            pos = 0;
+            skip = 0;
+            for (int i = 0; i < 256; i++)
+                str.Add(i);
+            for (int i = 0; i < 64; i++)
+            {
+                foreach (byte x in input)
+                {
+                    if (pos + x > str.Count)
+                    {
+                        int end = str.Count - pos;
+                        int rem = x - end;
+                        List<int> temp = new List<int>();
+                        temp.AddRange(str.GetRange(pos, end));
+                        temp.AddRange(str.GetRange(0, rem));
+                        temp.Reverse();
+                        str.RemoveRange(pos, end);
+                        str.RemoveRange(0, rem);
+                        str.AddRange(temp.GetRange(0, end));
+                        str.InsertRange(0, temp.GetRange(end, rem));
+                    }
+                    else
+                        str.Reverse(pos, x);
+                    pos = (pos + x + skip) % str.Count;
+                    skip++;
+                }
+            }
+            List<int> dense = new List<int>();
+            for (int i = 0; i < 16; i++)
+            {
+                int dh = str[i*16];
+                for (int j = 1; j < 16; j++)
+                {
+                    dh ^= str[i * 16 + j];
+                }
+                dense.Add(dh);
+            }
+            string output = "";
+            foreach (int d in dense)
+            {
+                string s = d.ToString("X").Length == 1 ? "0" + d.ToString("X") : d.ToString("X");
+                output += s;
+            }
+            Console.WriteLine("Day 10, Problem 1: " + result);
+            Console.WriteLine("Day 10, Problem 2: " + output);
         }
 
         /*  Day 11
