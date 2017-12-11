@@ -51,6 +51,7 @@
   <ItemGroup>
     <Content Include="problem1.txt" />
     <Content Include="problem10.txt" />
+    <Content Include="problem11.txt" />
     <Content Include="problem3.txt" />
     <Content Include="problem2.txt" />
     <Content Include="problem4.txt" />

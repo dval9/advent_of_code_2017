@@ -21,7 +21,7 @@ namespace AdventCalendar
             Problem8(@"../../problem8.txt");
             Problem9(@"..\..\problem9.txt");
             Problem10(@"..\..\problem10.txt");
-            //Problem11();
+            Problem11(@"..\..\problem11.txt");
             //Problem12();
             //Problem13();
             //Problem14();
@@ -761,12 +761,60 @@ namespace AdventCalendar
         }
 
         /*  Day 11
+         * problem 1:
+         * traverse hex grid
+         * find distance to point
          * 
+         * problem 2:
+         * what was farthest position along path
          */
-        static void Problem11()
+        static void Problem11(string __input)
         {
-            Console.WriteLine("Day 11, Problem 1: ");
-            Console.WriteLine("Day 11, Problem 2: ");
+            string input = File.ReadAllText(__input).Trim();
+            List<string> dirs = new List<string>();
+            char[] delims = { ',' };
+            dirs.AddRange(input.Split(delims, StringSplitOptions.RemoveEmptyEntries));
+            int x = 0;
+            int y = 0;
+            int z = 0;
+            int max = 0;
+            int dist = 0;
+            foreach (string dir in dirs)
+            {
+                switch(dir)
+                {
+                    case "n":
+                        y++;
+                        z--;
+                        break;
+                    case "ne":
+                        x++;
+                        z--;
+                        break;
+                    case "nw":
+                        x--;
+                        y++;
+                        break;
+                    case "s":
+                        y--;
+                        z++;
+                        break;
+                    case "se":
+                        x++;
+                        y--;
+                        break;
+                    case "sw":
+                        x--;
+                        z++;
+                        break;
+                }
+
+                dist = (Math.Abs(x) + Math.Abs(y) + Math.Abs(z)) / 2;
+                if (max < dist)
+                    max = (Math.Abs(x) + Math.Abs(y) + Math.Abs(z)) / 2;
+            }
+            Console.WriteLine("Day 11, Problem 1: "+ dist);
+            Console.WriteLine("Day 11, Problem 2: "+max);
         }
 
         /* Day 12
