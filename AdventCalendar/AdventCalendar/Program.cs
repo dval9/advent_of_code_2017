@@ -22,20 +22,20 @@ namespace AdventCalendar
             Problem9(@"..\..\problem9.txt");
             Problem10(@"..\..\problem10.txt");
             Problem11(@"..\..\problem11.txt");
-            //Problem12();
-            //Problem13();
-            //Problem14();
-            //Problem15();
-            //Problem16();
-            //Problem17();
-            //Problem18();
-            //Problem19();
-            //Problem20();
-            //Problem21();
-            //Problem22();
-            //Problem23();
-            //Problem24();
-            //Problem25();
+            Problem12(@"..\..\problem12.txt");
+            //Problem13(@"..\..\problem13.txt");
+            //Problem14(@"..\..\problem14.txt");
+            //Problem15(@"..\..\problem15.txt");
+            //Problem16(@"..\..\problem16.txt");
+            //Problem17(@"..\..\problem17.txt");
+            //Problem18(@"..\..\problem18.txt");
+            //Problem19(@"..\..\problem19.txt");
+            //Problem20(@"..\..\problem20.txt");
+            //Problem21(@"..\..\problem21.txt");
+            //Problem22(@"..\..\problem22.txt");
+            //Problem23(@"..\..\problem23.txt");
+            //Problem24(@"..\..\problem24.txt");
+            //Problem25(@"..\..\problem25.txt");
             Console.ReadLine();
         }
 
@@ -820,8 +820,10 @@ namespace AdventCalendar
         /* Day 12
          * 
          */
-        static void Problem12()
+        static void Problem12(string __input)
         {
+
+
             Console.WriteLine("Day 12, Problem 1: ");
             Console.WriteLine("Day 12, Problem 2: ");
         }
@@ -829,7 +831,7 @@ namespace AdventCalendar
         /* Day 13
          * 
          */
-        static void Problem13()
+        static void Problem13(string __input)
         {
             Console.WriteLine("Day 13, Problem 1: ");
             Console.WriteLine("Day 13, Problem 2: ");
@@ -838,7 +840,7 @@ namespace AdventCalendar
         /* Day 14
          * 
          */
-        static void Problem14()
+        static void Problem14(string __input)
         {
             Console.WriteLine("Day 14, Problem 1: ");
             Console.WriteLine("Day 14, Problem 2: ");
@@ -847,7 +849,7 @@ namespace AdventCalendar
         /* Day 15
          * 
          */
-        static void Problem15()
+        static void Problem15(string __input)
         {
             Console.WriteLine("Day 15, Problem 1: ");
             Console.WriteLine("Day 15, Problem 2: ");
@@ -856,7 +858,7 @@ namespace AdventCalendar
         /* Day 16
          * 
          */
-        static void Problem16()
+        static void Problem16(string __input)
         {
             Console.WriteLine("Day 16, Problem 1: ");
             Console.WriteLine("Day 16, Problem 2: ");
@@ -865,7 +867,7 @@ namespace AdventCalendar
         /* Day 17
          * 
          */
-        static void Problem17()
+        static void Problem17(string __input)
         {
             Console.WriteLine("Day 17, Problem 1: ");
             Console.WriteLine("Day 17, Problem 2: ");
@@ -874,7 +876,7 @@ namespace AdventCalendar
         /* Day 18
          * 
          */
-        static void Problem18()
+        static void Problem18(string __input)
         {
             Console.WriteLine("Day 18, Problem 1: ");
             Console.WriteLine("Day 18, Problem 2: ");
@@ -883,7 +885,7 @@ namespace AdventCalendar
         /* Day 19
          * 
          */
-        static void Problem19()
+        static void Problem19(string __input)
         {
             Console.WriteLine("Day 19, Problem 1: ");
             Console.WriteLine("Day 19, Problem 2: ");
@@ -892,7 +894,7 @@ namespace AdventCalendar
         /* Day 20
          * 
          */
-        static void Problem20()
+        static void Problem20(string __input)
         {
             Console.WriteLine("Day 20, Problem 1: ");
             Console.WriteLine("Day 20, Problem 2: ");
@@ -901,7 +903,7 @@ namespace AdventCalendar
         /* Day 21
          * 
          */
-        static void Problem21()
+        static void Problem21(string __input)
         {
             Console.WriteLine("Day 21, Problem 1: ");
             Console.WriteLine("Day 21, Problem 2: ");
@@ -910,7 +912,7 @@ namespace AdventCalendar
         /* Day 22
          * 
          */
-        static void Problem22()
+        static void Problem22(string __input)
         {
             Console.WriteLine("Day 22, Problem 1: ");
             Console.WriteLine("Day 22, Problem 2: ");
@@ -919,7 +921,7 @@ namespace AdventCalendar
         /* Day 23
          * 
          */
-        static void Problem23()
+        static void Problem23(string __input)
         {
             Console.WriteLine("Day 23, Problem 1: ");
             Console.WriteLine("Day 23, Problem 2: ");
@@ -928,7 +930,7 @@ namespace AdventCalendar
         /* Day 24
          * 
          */
-        static void Problem24()
+        static void Problem24(string __input)
         {
             Console.WriteLine("Day 24, Problem 1: ");
             Console.WriteLine("Day 24, Problem 2: ");
@@ -937,7 +939,7 @@ namespace AdventCalendar
         /* Day 25
          * 
          */
-        static void Problem25()
+        static void Problem25(string __input)
         {
             Console.WriteLine("Day 25, Problem 1: ");
             Console.WriteLine("Day 25, Problem 2: ");
