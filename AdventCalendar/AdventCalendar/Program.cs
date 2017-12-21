@@ -338,7 +338,7 @@ namespace AdventCalendar
             mem.Add(config, null);
             bool start = false;
             int ans1 = 0;
-            for (; ; )
+            for (;;)
             {
                 config = "";
                 int max = 0;
@@ -743,7 +743,7 @@ namespace AdventCalendar
             List<int> dense = new List<int>();
             for (int i = 0; i < 16; i++)
             {
-                int dh = str[i*16];
+                int dh = str[i * 16];
                 for (int j = 1; j < 16; j++)
                 {
                     dh ^= str[i * 16 + j];
@@ -781,7 +781,7 @@ namespace AdventCalendar
             int dist = 0;
             foreach (string dir in dirs)
             {
-                switch(dir)
+                switch (dir)
                 {
                     case "n":
                         y++;
@@ -813,8 +813,8 @@ namespace AdventCalendar
                 if (max < dist)
                     max = (Math.Abs(x) + Math.Abs(y) + Math.Abs(z)) / 2;
             }
-            Console.WriteLine("Day 11, Problem 1: "+ dist);
-            Console.WriteLine("Day 11, Problem 2: "+max);
+            Console.WriteLine("Day 11, Problem 1: " + dist);
+            Console.WriteLine("Day 11, Problem 2: " + max);
         }
 
         /* Day 12
@@ -822,10 +822,55 @@ namespace AdventCalendar
          */
         static void Problem12(string __input)
         {
-
-
-            Console.WriteLine("Day 12, Problem 1: ");
-            Console.WriteLine("Day 12, Problem 2: ");
+            string[] input = File.ReadAllLines(__input);
+            Dictionary<int, int> pipes = new Dictionary<int, int>();
+            char[] delims = { '<', '-', '>', ',', ' ' };
+            int groups = 0;
+            int group_0 = 0;
+            for (int i = 0; i < input.Length; i++)
+            {
+                List<int> next = new List<int>();
+                string[] line = input[i].Split(delims, StringSplitOptions.RemoveEmptyEntries);
+                if (pipes.ContainsKey(int.Parse(line[0])))
+                {
+                    continue;
+                }
+                pipes.Add(int.Parse(line[0]), 1);
+                groups++;
+                for (int j = 1; j < line.Length; j++)
+                {
+                    if (pipes.ContainsKey(int.Parse(line[j])))
+                    {
+                        pipes[int.Parse(line[j])]++;
+                    }
+                    else
+                    {
+                        pipes.Add(int.Parse(line[j]), 1);
+                        next.Add(int.Parse(line[j]));
+                    }
+                }
+                while (next.Count != 0)
+                {
+                    line = input[next[0]].Split(delims, StringSplitOptions.RemoveEmptyEntries);
+                    next.RemoveAt(0);
+                    for (int j = 1; j < line.Length; j++)
+                    {
+                        if (pipes.ContainsKey(int.Parse(line[j])))
+                        {
+                            pipes[int.Parse(line[j])]++;
+                        }
+                        else
+                        {
+                            pipes.Add(int.Parse(line[j]), 1);
+                            next.Add(int.Parse(line[j]));
+                        }
+                    }
+                }
+                if (i == 0)
+                    group_0 = pipes.Count;
+            }
+            Console.WriteLine("Day 12, Problem 1: " + group_0);
+            Console.WriteLine("Day 12, Problem 2: " + groups);
         }
 
         /* Day 13
@@ -833,6 +878,8 @@ namespace AdventCalendar
          */
         static void Problem13(string __input)
         {
+
+
             Console.WriteLine("Day 13, Problem 1: ");
             Console.WriteLine("Day 13, Problem 2: ");
         }
