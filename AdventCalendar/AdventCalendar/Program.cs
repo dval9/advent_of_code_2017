@@ -11,31 +11,31 @@ namespace AdventCalendar
     {
         static void Main(string[] args)
         {
-            Problem1(@"..\..\problem1.txt");
-            Problem2(@"..\..\problem2.txt");
-            Problem3(@"..\..\problem3.txt");
-            Problem4(@"..\..\problem4.txt");
-            Problem5(@"..\..\problem5.txt");
-            Problem6(@"..\..\problem6.txt");
-            Problem7(@"..\..\problem7.txt");
-            Problem8(@"../../problem8.txt");
-            Problem9(@"..\..\problem9.txt");
-            Problem10(@"..\..\problem10.txt");
-            Problem11(@"..\..\problem11.txt");
-            Problem12(@"..\..\problem12.txt");
+            //Problem1(@"..\..\problem1.txt");
+            //Problem2(@"..\..\problem2.txt");
+            //Problem3(@"..\..\problem3.txt");
+            //Problem4(@"..\..\problem4.txt");
+            //Problem5(@"..\..\problem5.txt");
+            //Problem6(@"..\..\problem6.txt");
+            //Problem7(@"..\..\problem7.txt");
+            //Problem8(@"../../problem8.txt");
+            //Problem9(@"..\..\problem9.txt");
+            //Problem10(@"..\..\problem10.txt");
+            //Problem11(@"..\..\problem11.txt");
+            //Problem12(@"..\..\problem12.txt");
             //Problem13(@"..\..\problem13.txt");
             //Problem14(@"..\..\problem14.txt");
             //Problem15(@"..\..\problem15.txt");
             //Problem16(@"..\..\problem16.txt");
-            //Problem17(@"..\..\problem17.txt");
-            //Problem18(@"..\..\problem18.txt");
-            //Problem19(@"..\..\problem19.txt");
-            //Problem20(@"..\..\problem20.txt");
-            //Problem21(@"..\..\problem21.txt");
-            //Problem22(@"..\..\problem22.txt");
-            //Problem23(@"..\..\problem23.txt");
-            //Problem24(@"..\..\problem24.txt");
-            //Problem25(@"..\..\problem25.txt");
+            Problem17(@"..\..\problem17.txt");
+            Problem18(@"..\..\problem18.txt");
+            Problem19(@"..\..\problem19.txt");
+            Problem20(@"..\..\problem20.txt");
+            Problem21(@"..\..\problem21.txt");
+            Problem22(@"..\..\problem22.txt");
+            Problem23(@"..\..\problem23.txt");
+            Problem24(@"..\..\problem24.txt");
+            Problem25(@"..\..\problem25.txt");
             Console.ReadLine();
         }
 
@@ -878,10 +878,45 @@ namespace AdventCalendar
          */
         static void Problem13(string __input)
         {
-
-
-            Console.WriteLine("Day 13, Problem 1: ");
-            Console.WriteLine("Day 13, Problem 2: ");
+            string[] input = File.ReadAllLines(__input);
+            Dictionary<int, int> firewall = new Dictionary<int, int>();
+            char[] delims = { ' ', ':' };
+            int penalty = 0;
+            int penalty_0 = 0;
+            int delay = 0;
+            int max_time = int.Parse(input[input.Length - 1].Split(delims, StringSplitOptions.RemoveEmptyEntries)[0]);
+            foreach (string line in input)
+            {
+                string[] temp = line.Split(delims, StringSplitOptions.RemoveEmptyEntries);
+                firewall.Add(int.Parse(temp[0]), int.Parse(temp[1]));
+            }
+            for (int i = 0; i <= max_time; i++)
+            {
+                if (!firewall.Keys.Contains(i))
+                    continue;
+                int range = firewall[i];
+                int period = (range - 1) * 2;
+                if (i % period == 0)
+                    penalty += i * range;
+            }
+            penalty_0 = penalty;
+            for (; ; delay++)
+            {
+                penalty = 0;
+                for (int i = 0; i <= max_time; i++)
+                {
+                    if (!firewall.Keys.Contains(i))
+                        continue;
+                    int range = firewall[i];
+                    int period = (range - 1) * 2;
+                    if ((delay + i) % period == 0)
+                        penalty += i * range + 1;
+                }
+                if (penalty == 0)
+                    break;
+            }
+            Console.WriteLine("Day 13, Problem 1: " + penalty_0);
+            Console.WriteLine("Day 13, Problem 2: " + delay);
         }
 
         /* Day 14
@@ -889,8 +924,136 @@ namespace AdventCalendar
          */
         static void Problem14(string __input)
         {
-            Console.WriteLine("Day 14, Problem 1: ");
-            Console.WriteLine("Day 14, Problem 2: ");
+            string input = File.ReadAllText(__input);
+            int used = 0;
+            int regions = 0;
+            Dictionary<char, string> mapping = new Dictionary<char, string>
+            {
+                { '0', "0000" }, { '1', "0001" }, { '2', "0010" }, { '3', "0011" },
+                { '4', "0100" }, { '5', "0101" }, { '6', "0110" }, { '7', "0111" },
+                { '8', "1000" }, { '9', "1001" }, { 'A', "1010" }, { 'B', "1011" },
+                { 'C', "1100" }, { 'D', "1101" }, { 'E', "1110" }, { 'F', "1111" }
+            };
+            List<List<char>> grid = new List<List<char>>();
+            bool[,] visited = new bool[128, 128];
+            for (int i = 0; i < 128; i++)
+            {
+                string line = Knot_Hash(input + "-" + i.ToString());
+                byte[] str = HexToBytes(line);
+                for (int j = 0; j < str.Length; j++)
+                {
+                    used += CountBits(Convert.ToInt32(str[j]));
+                }
+                grid.Add(new List<char>());
+                foreach (char c in line.ToCharArray())
+                {
+                    string d = mapping[c];
+                    foreach (char dd in d.ToCharArray())
+                        grid[i].Add(dd);
+                }
+            }
+            for (int x = 0; x < 128; x++)
+            {
+                for (int y = 0; y < 128; y++)
+                {
+                    if (visited[x, y] || grid[x][y] == '0')
+                        continue;
+                    Visit(x, y, ref grid, ref visited);
+                    regions++;
+                }
+            }
+            Console.WriteLine("Day 14, Problem 1: " + used);
+            Console.WriteLine("Day 14, Problem 2: " + regions);
+        }
+
+        static void Visit(int x, int y, ref List<List<char>> grid, ref bool[,] visited)
+        {
+            if (visited[x, y])
+                return;
+            visited[x, y] = true;
+            if (grid[x][y] == '0')
+                return;
+            if (x > 0)
+                Visit(x - 1, y, ref grid, ref visited);
+            if (x < 127)
+                Visit(x + 1, y, ref grid, ref visited);
+            if (y > 0)
+                Visit(x, y - 1, ref grid, ref visited);
+            if (y < 127)
+                Visit(x, y + 1, ref grid, ref visited);
+        }
+
+        static int CountBits(int b)
+        {
+            int count;
+            for (count = 0; b != 0; count++)
+                b &= b - 1;
+            return count;
+        }
+
+        static byte[] HexToBytes(string hex_string)
+        {
+            byte[] retval = new byte[hex_string.Length / 2];
+            for (int i = 0; i < retval.Length; i++)
+            {
+                retval[i] = Convert.ToByte(hex_string.Substring(i * 2, 2), 16);
+            }
+            return retval;
+        }
+
+        static string Knot_Hash(string hash)
+        {
+            List<byte> input = Encoding.ASCII.GetBytes(hash).ToList();
+            input.Add(Convert.ToByte(17));
+            input.Add(Convert.ToByte(31));
+            input.Add(Convert.ToByte(73));
+            input.Add(Convert.ToByte(47));
+            input.Add(Convert.ToByte(23));
+            List<int> str = new List<int>();
+            int pos = 0;
+            int skip = 0;
+            for (int i = 0; i < 256; i++)
+                str.Add(i);
+            for (int i = 0; i < 64; i++)
+            {
+                foreach (byte x in input)
+                {
+                    if (pos + x > str.Count)
+                    {
+                        int end = str.Count - pos;
+                        int rem = x - end;
+                        List<int> temp = new List<int>();
+                        temp.AddRange(str.GetRange(pos, end));
+                        temp.AddRange(str.GetRange(0, rem));
+                        temp.Reverse();
+                        str.RemoveRange(pos, end);
+                        str.RemoveRange(0, rem);
+                        str.AddRange(temp.GetRange(0, end));
+                        str.InsertRange(0, temp.GetRange(end, rem));
+                    }
+                    else
+                        str.Reverse(pos, x);
+                    pos = (pos + x + skip) % str.Count;
+                    skip++;
+                }
+            }
+            List<int> dense = new List<int>();
+            for (int i = 0; i < 16; i++)
+            {
+                int dh = str[i * 16];
+                for (int j = 1; j < 16; j++)
+                {
+                    dh ^= str[i * 16 + j];
+                }
+                dense.Add(dh);
+            }
+            string output = "";
+            foreach (int d in dense)
+            {
+                string s = d.ToString("X").Length == 1 ? "0" + d.ToString("X") : d.ToString("X");
+                output += s;
+            }
+            return output;
         }
 
         /* Day 15
@@ -898,8 +1061,44 @@ namespace AdventCalendar
          */
         static void Problem15(string __input)
         {
-            Console.WriteLine("Day 15, Problem 1: ");
-            Console.WriteLine("Day 15, Problem 2: ");
+            UInt64 factor_A = 16807;
+            UInt64 factor_B = 48271;
+            UInt64 mod = 2147483647;
+            int match1 = 0;
+            int match2 = 0;
+            string[] input = File.ReadAllLines(__input);
+            char[] delims = { ' ' };
+            UInt64 gen_A = uint.Parse(input[0].Split(delims, StringSplitOptions.RemoveEmptyEntries)[4]);
+            UInt64 gen_B = uint.Parse(input[1].Split(delims, StringSplitOptions.RemoveEmptyEntries)[4]);
+            for (int i = 0; i < 40000000; i++)
+            {
+                gen_A = (gen_A * factor_A) % mod;
+                gen_B = (gen_B * factor_B) % mod;
+                byte[] A = BitConverter.GetBytes((UInt32)gen_A);
+                byte[] B = BitConverter.GetBytes((UInt32)gen_B);
+                if (A[0] == B[0] && A[1] == B[1])
+                    match1++;
+            }
+            gen_A = uint.Parse(input[0].Split(delims, StringSplitOptions.RemoveEmptyEntries)[4]);
+            gen_B = uint.Parse(input[1].Split(delims, StringSplitOptions.RemoveEmptyEntries)[4]);
+            for (int i = 0; i < 5000000; i++)
+            {
+                do
+                {
+                    gen_A = (gen_A * factor_A) % mod;
+                } while (gen_A % 4 != 0);
+                do
+                {
+                    gen_B = (gen_B * factor_B) % mod;
+                } while (gen_B % 8 != 0);
+                byte[] A = BitConverter.GetBytes((UInt32)gen_A);
+                byte[] B = BitConverter.GetBytes((UInt32)gen_B);
+                if (A[0] == B[0] && A[1] == B[1])
+                    match2++;
+            }
+
+            Console.WriteLine("Day 15, Problem 1: " + match1);
+            Console.WriteLine("Day 15, Problem 2: " + match2);
         }
 
         /* Day 16
@@ -907,8 +1106,59 @@ namespace AdventCalendar
          */
         static void Problem16(string __input)
         {
-            Console.WriteLine("Day 16, Problem 1: ");
-            Console.WriteLine("Day 16, Problem 2: ");
+            string input = File.ReadAllText(__input);
+            char[] delims = { ',' };
+            string first_dance = "";
+            string final_dance = "";
+            int dance_count = 0;
+            Dictionary<int, string> dancehash = new Dictionary<int, string>();
+            dancehash.Add(0, "abcdefghijklmnop");
+            string[] moves = input.Split(delims, StringSplitOptions.RemoveEmptyEntries);
+            List<char> progs = new List<char>(new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p' });
+            for(;;)
+            {
+                foreach (string move in moves)
+                {
+                    if (move[0].Equals('s'))
+                    {
+                        int count = int.Parse(move.Substring(1));
+                        for (int c = 0; c < count; c++)
+                        {
+                            char temp = progs[progs.Count - 1];
+                            for (int i = progs.Count - 1; i > 0; i--)
+                            {
+                                progs[i] = progs[i - 1];
+                            }
+                            progs[0] = temp;
+                        }
+                    }
+                    else if (move[0].Equals('x'))
+                    {
+                        char[] delim = { '/' };
+                        int f = int.Parse(move.Substring(1).Split(delim, StringSplitOptions.RemoveEmptyEntries)[0]);
+                        int s = int.Parse(move.Substring(1).Split(delim, StringSplitOptions.RemoveEmptyEntries)[1]);
+                        char temp = progs[f];
+                        progs[f] = progs[s];
+                        progs[s] = temp;
+                    }
+                    else if (move[0].Equals('p'))
+                    {
+                        int indx1 = progs.IndexOf(move[1]);
+                        int indx2 = progs.IndexOf(move[3]);
+                        progs[indx1] = move[3];
+                        progs[indx2] = move[1];
+                    }
+                }
+                dance_count++;
+                if (dance_count == 1)
+                    first_dance = string.Join("", progs.ToArray());
+                if (dancehash[0].Equals(string.Join("", progs.ToArray())))
+                    break;
+                dancehash.Add(dance_count, string.Join("", progs.ToArray()));
+            }
+            final_dance = dancehash[1000000000 % dance_count];
+            Console.WriteLine("Day 16, Problem 1: " + first_dance);
+            Console.WriteLine("Day 16, Problem 2: " + final_dance);
         }
 
         /* Day 17
