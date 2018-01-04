@@ -27,7 +27,7 @@ namespace AdventCalendar
             //Problem14(@"..\..\problem14.txt");
             //Problem15(@"..\..\problem15.txt");
             //Problem16(@"..\..\problem16.txt");
-            Problem17(@"..\..\problem17.txt");
+            //Problem17(@"..\..\problem17.txt");
             Problem18(@"..\..\problem18.txt");
             Problem19(@"..\..\problem19.txt");
             Problem20(@"..\..\problem20.txt");
@@ -1115,7 +1115,7 @@ namespace AdventCalendar
             dancehash.Add(0, "abcdefghijklmnop");
             string[] moves = input.Split(delims, StringSplitOptions.RemoveEmptyEntries);
             List<char> progs = new List<char>(new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p' });
-            for(;;)
+            for (;;)
             {
                 foreach (string move in moves)
                 {
@@ -1166,8 +1166,30 @@ namespace AdventCalendar
          */
         static void Problem17(string __input)
         {
-            Console.WriteLine("Day 17, Problem 1: ");
-            Console.WriteLine("Day 17, Problem 2: ");
+            string input = File.ReadAllText(__input);
+            int steps = int.Parse(input);
+            List<int> buf = new List<int>();
+            int pointer = 0;
+            buf.Add(0);
+            int i;
+            for (i = 1; i < 2018; i++)
+            {
+                pointer = (pointer + steps) % i;
+                buf.Insert(pointer + 1, i);
+                pointer++;
+            }
+            int out1 = buf[pointer + 1];
+            pointer = 0;
+            int z = 0;
+            for (i = 1; i < 50000000; i++)
+            {
+                pointer = (pointer + steps) % i;
+                if (pointer == 0)
+                    z = i;
+                pointer++;
+            }
+            Console.WriteLine("Day 17, Problem 1: " + out1);
+            Console.WriteLine("Day 17, Problem 2: " + z);
         }
 
         /* Day 18
@@ -1175,7 +1197,87 @@ namespace AdventCalendar
          */
         static void Problem18(string __input)
         {
-            Console.WriteLine("Day 18, Problem 1: ");
+            string[] input = File.ReadAllLines(__input);
+            char[] delims = { ' ' };
+            Dictionary<string, Int64> regs = new Dictionary<string, Int64>();
+            Int64 last_sound = 0;
+            foreach (string ins in input)
+            {
+                string[] line = ins.Split(delims, StringSplitOptions.RemoveEmptyEntries);
+                if (Char.IsLetter(line[1][0]) && !regs.Keys.Contains(line[1]))
+                    regs.Add(line[1], 0);
+            }
+            for (int i = 0; i < input.Length; i++)
+            {
+                string[] line = input[i].Split(delims, StringSplitOptions.RemoveEmptyEntries);
+                switch (line[0])
+                {
+                    case "snd":
+                        if (char.IsLetter(line[1][0]))
+                            last_sound = regs[line[1]];
+                        else
+                            last_sound = Int64.Parse(line[1]);
+                        break;
+                    case "set":
+                        if (char.IsLetter(line[2][0]))
+                            regs[line[1]] = regs[line[2]];
+                        else
+                            regs[line[1]] = Int64.Parse(line[2]);
+                        break;
+                    case "add":
+                        if (char.IsLetter(line[2][0]))
+                            regs[line[1]] += regs[line[2]];
+                        else
+                            regs[line[1]] += Int64.Parse(line[2]);
+                        break;
+                    case "mul":
+                        if (char.IsLetter(line[2][0]))
+                            regs[line[1]] *= regs[line[2]];
+                        else
+                            regs[line[1]] *= Int64.Parse(line[2]);
+                        break;
+                    case "mod":
+                        if (char.IsLetter(line[2][0]))
+                            regs[line[1]] %= regs[line[2]];
+                        else
+                            regs[line[1]] %= Int64.Parse(line[2]);
+                        break;
+                    case "rcv":
+                        if (regs[line[1]] != 0)
+                            i = input.Length;
+                        break;
+                    case "jgz":
+                        if (char.IsLetter(line[1][0]))
+                        {
+                            if (char.IsLetter(line[2][0]))
+                            {
+                                if (regs[line[1]] > 0)
+                                    i += (int)(regs[line[2]] - 1);
+                            }
+                            else
+                            {
+                                if (regs[line[1]] > 0)
+                                    i += (int.Parse(line[2]) - 1);
+                            }
+                        }
+                        else
+                        {
+                            if (char.IsLetter(line[2][0]))
+                            {
+                                if (int.Parse(line[1]) > 0)
+                                    i += (int)(regs[line[2]] - 1);
+                            }
+                            else
+                            {
+                                if (int.Parse(line[1]) > 0)
+                                    i += (int.Parse(line[2]) - 1);
+                            }
+                        }
+                        break;
+                }
+            }
+
+            Console.WriteLine("Day 18, Problem 1: " + last_sound);
             Console.WriteLine("Day 18, Problem 2: ");
         }
 
