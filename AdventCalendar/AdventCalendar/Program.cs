@@ -28,7 +28,7 @@ namespace AdventCalendar
             //Problem15(@"..\..\problem15.txt");
             //Problem16(@"..\..\problem16.txt");
             //Problem17(@"..\..\problem17.txt");
-            Problem18(@"..\..\problem18.txt");
+            //Problem18(@"..\..\problem18.txt");
             Problem19(@"..\..\problem19.txt");
             Problem20(@"..\..\problem20.txt");
             Problem21(@"..\..\problem21.txt");
@@ -1199,8 +1199,8 @@ namespace AdventCalendar
         {
             string[] input = File.ReadAllLines(__input);
             char[] delims = { ' ' };
-            Dictionary<string, Int64> regs = new Dictionary<string, Int64>();
             Int64 last_sound = 0;
+            Dictionary<string, Int64> regs = new Dictionary<string, Int64>();
             foreach (string ins in input)
             {
                 string[] line = ins.Split(delims, StringSplitOptions.RemoveEmptyEntries);
@@ -1276,9 +1276,187 @@ namespace AdventCalendar
                         break;
                 }
             }
-
+            //part 2
+            Dictionary<string, Int64> regs0 = new Dictionary<string, Int64>();
+            Dictionary<string, Int64> regs1 = new Dictionary<string, Int64>();
+            Queue<Int64> queue0 = new Queue<Int64>();
+            Queue<Int64> queue1 = new Queue<Int64>();
+            int pointer0 = 0;
+            int pointer1 = 0;
+            int curr_prog = 0;
+            bool run = true;
+            int prog1_send = 0;
+            foreach (string ins in input)
+            {
+                string[] line = ins.Split(delims, StringSplitOptions.RemoveEmptyEntries);
+                if (Char.IsLetter(line[1][0]) && !regs0.Keys.Contains(line[1]))
+                {
+                    regs0.Add(line[1], 0);
+                    regs1.Add(line[1], 0);
+                }                    
+            }
+            regs1["p"] = 1;
+            while (run)
+            {
+                string[] line;
+                if (curr_prog == 0)
+                {
+                    line = input[pointer0].Split(delims, StringSplitOptions.RemoveEmptyEntries);
+                    switch (line[0])
+                    {
+                        case "snd":
+                            if (char.IsLetter(line[1][0]))
+                                queue1.Enqueue(regs0[line[1]]);
+                            else
+                                queue1.Enqueue(Int64.Parse(line[1]));
+                            break;
+                        case "set":
+                            if (char.IsLetter(line[2][0]))
+                                regs0[line[1]] = regs0[line[2]];
+                            else
+                                regs0[line[1]] = Int64.Parse(line[2]);
+                            break;
+                        case "add":
+                            if (char.IsLetter(line[2][0]))
+                                regs0[line[1]] += regs0[line[2]];
+                            else
+                                regs0[line[1]] += Int64.Parse(line[2]);
+                            break;
+                        case "mul":
+                            if (char.IsLetter(line[2][0]))
+                                regs0[line[1]] *= regs0[line[2]];
+                            else
+                                regs0[line[1]] *= Int64.Parse(line[2]);
+                            break;
+                        case "mod":
+                            if (char.IsLetter(line[2][0]))
+                                regs0[line[1]] %= regs0[line[2]];
+                            else
+                                regs0[line[1]] %= Int64.Parse(line[2]);
+                            break;
+                        case "rcv":
+                            if (queue0.Count == 0 && queue1.Count == 0)
+                                run = false;
+                            else if (queue0.Count == 0)
+                            {
+                                curr_prog = 1;
+                                pointer0--;
+                            }                                
+                            else
+                                regs0[line[1]] = queue0.Dequeue();
+                            break;
+                        case "jgz":
+                            if (char.IsLetter(line[1][0]))
+                            {
+                                if (char.IsLetter(line[2][0]))
+                                {
+                                    if (regs0[line[1]] > 0)
+                                        pointer0 += (int)(regs0[line[2]] - 1);
+                                }
+                                else
+                                {
+                                    if (regs0[line[1]] > 0)
+                                        pointer0 += (int.Parse(line[2]) - 1);
+                                }
+                            }
+                            else
+                            {
+                                if (char.IsLetter(line[2][0]))
+                                {
+                                    if (int.Parse(line[1]) > 0)
+                                        pointer0 += (int)(regs0[line[2]] - 1);
+                                }
+                                else
+                                {
+                                    if (int.Parse(line[1]) > 0)
+                                        pointer0 += (int.Parse(line[2]) - 1);
+                                }
+                            }
+                            break;
+                    }
+                    pointer0++;
+                }
+                else
+                {
+                    line = input[pointer1].Split(delims, StringSplitOptions.RemoveEmptyEntries);
+                    switch (line[0])
+                    {
+                        case "snd":
+                            if (char.IsLetter(line[1][0]))
+                                queue0.Enqueue(regs1[line[1]]);
+                            else
+                                queue0.Enqueue(Int64.Parse(line[1]));
+                            prog1_send++;
+                            break;
+                        case "set":
+                            if (char.IsLetter(line[2][0]))
+                                regs1[line[1]] = regs1[line[2]];
+                            else
+                                regs1[line[1]] = Int64.Parse(line[2]);
+                            break;
+                        case "add":
+                            if (char.IsLetter(line[2][0]))
+                                regs1[line[1]] += regs1[line[2]];
+                            else
+                                regs1[line[1]] += Int64.Parse(line[2]);
+                            break;
+                        case "mul":
+                            if (char.IsLetter(line[2][0]))
+                                regs1[line[1]] *= regs1[line[2]];
+                            else
+                                regs1[line[1]] *= Int64.Parse(line[2]);
+                            break;
+                        case "mod":
+                            if (char.IsLetter(line[2][0]))
+                                regs1[line[1]] %= regs1[line[2]];
+                            else
+                                regs1[line[1]] %= Int64.Parse(line[2]);
+                            break;
+                        case "rcv":
+                            if (queue0.Count == 0 && queue1.Count == 0)
+                                run = false;
+                            else if (queue1.Count == 0)
+                            {
+                                curr_prog = 0;
+                                pointer1--;
+                            }
+                            else
+                                regs1[line[1]] = queue1.Dequeue();
+                            break;
+                        case "jgz":
+                            if (char.IsLetter(line[1][0]))
+                            {
+                                if (char.IsLetter(line[2][0]))
+                                {
+                                    if (regs1[line[1]] > 0)
+                                        pointer1 += (int)(regs1[line[2]] - 1);
+                                }
+                                else
+                                {
+                                    if (regs1[line[1]] > 0)
+                                        pointer1 += (int.Parse(line[2]) - 1);
+                                }
+                            }
+                            else
+                            {
+                                if (char.IsLetter(line[2][0]))
+                                {
+                                    if (int.Parse(line[1]) > 0)
+                                        pointer1 += (int)(regs1[line[2]] - 1);
+                                }
+                                else
+                                {
+                                    if (int.Parse(line[1]) > 0)
+                                        pointer1 += (int.Parse(line[2]) - 1);
+                                }
+                            }
+                            break;
+                    }
+                    pointer1++;
+                }
+            }
             Console.WriteLine("Day 18, Problem 1: " + last_sound);
-            Console.WriteLine("Day 18, Problem 2: ");
+            Console.WriteLine("Day 18, Problem 2: "+ prog1_send);
         }
 
         /* Day 19
