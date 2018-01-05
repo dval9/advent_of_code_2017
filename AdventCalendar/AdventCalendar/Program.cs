@@ -32,7 +32,7 @@ namespace AdventCalendar
             //Problem19(@"..\..\problem19.txt");
             //Problem20(@"..\..\problem20.txt");
             Problem21(@"..\..\problem21.txt");
-            Problem22(@"..\..\problem22.txt");
+            //Problem22(@"..\..\problem22.txt");
             Problem23(@"..\..\problem23.txt");
             Problem24(@"..\..\problem24.txt");
             Problem25(@"..\..\problem25.txt");
@@ -1694,8 +1694,136 @@ namespace AdventCalendar
          */
         static void Problem22(string __input)
         {
-            Console.WriteLine("Day 22, Problem 1: ");
-            Console.WriteLine("Day 22, Problem 2: ");
+            string[] input = File.ReadAllLines(__input);
+            List<List<char>> map = new List<List<char>>();
+            for (int i = 0; i < 9999; i++)
+            {
+                map.Add(new List<char>());
+                for (int j = 0; j < 9999; j++)
+                {
+                    map[i].Add('.');
+                }
+            }
+            for (int i = 0; i < input.Length; i++)
+            {
+                for (int j = 0; j < input.Length; j++)
+                {
+                    map[(map.Count - input.Length) / 2 + i][(map.Count - input.Length) / 2 + j] = input[i][j];
+                }
+            }
+            int x = map.Count / 2;
+            int y = x;
+            int dir = 0; //0=up,1=right,2=down,3=left
+            int infected = 0;
+            for (int i = 0; i < 10000; i++)
+            {
+                if (map[x][y].Equals('#'))
+                {
+                    dir = (dir + 1) % 4;
+                }
+                else
+                {
+                    dir = ((dir - 1) % 4) < 0 ? (dir - 1) % 4 + 4 : (dir - 1) % 4;
+                }
+                if (map[x][y].Equals('.'))
+                {
+                    infected++;
+                    map[x][y] = '#';
+                }
+                else
+                {
+                    map[x][y] = '.';
+                }
+                switch (dir)
+                {
+                    case 0:
+                        x--;
+                        break;
+                    case 1:
+                        y++;
+                        break;
+                    case 2:
+                        x++;
+                        break;
+                    case 3:
+                        y--;
+                        break;
+                }
+            }
+            //part 2
+            map = new List<List<char>>();
+            for (int i = 0; i < 9999; i++)
+            {
+                map.Add(new List<char>());
+                for (int j = 0; j < 9999; j++)
+                {
+                    map[i].Add('.');
+                }
+            }
+            for (int i = 0; i < input.Length; i++)
+            {
+                for (int j = 0; j < input.Length; j++)
+                {
+                    map[(map.Count - input.Length) / 2 + i][(map.Count - input.Length) / 2 + j] = input[i][j];
+                }
+            }
+            x = map.Count / 2;
+            y = x;
+            dir = 0; //0=up,1=right,2=down,3=left
+            int infected2 = 0;
+            for (int i = 0; i < 10000000; i++)
+            {
+                if (map[x][y].Equals('#'))
+                {
+                    dir = (dir + 1) % 4;
+                }
+                else if (map[x][y].Equals('.'))
+                {
+                    dir = ((dir - 1) % 4) < 0 ? (dir - 1) % 4 + 4 : (dir - 1) % 4;
+                }
+                else if (map[x][y].Equals('W'))
+                {
+                    //
+                }
+                else if (map[x][y].Equals('F'))
+                {
+                    dir = (dir + 2) % 4;
+                }
+                if (map[x][y].Equals('.'))
+                {
+                    map[x][y] = 'W';
+                }
+                else if (map[x][y].Equals('W'))
+                {
+                    infected2++;
+                    map[x][y] = '#';
+                }
+                else if (map[x][y].Equals('#'))
+                {
+                    map[x][y] = 'F';
+                }
+                else if (map[x][y].Equals('F'))
+                {
+                    map[x][y] = '.';
+                }
+                switch (dir)
+                {
+                    case 0:
+                        x--;
+                        break;
+                    case 1:
+                        y++;
+                        break;
+                    case 2:
+                        x++;
+                        break;
+                    case 3:
+                        y--;
+                        break;
+                }
+            }
+            Console.WriteLine("Day 22, Problem 1: " + infected);
+            Console.WriteLine("Day 22, Problem 2: " + infected2);
         }
 
         /* Day 23
@@ -1703,7 +1831,110 @@ namespace AdventCalendar
          */
         static void Problem23(string __input)
         {
-            Console.WriteLine("Day 23, Problem 1: ");
+            string[] input = File.ReadAllLines(__input);
+            char[] delims = { ' ' };
+            int pointer0 = 0;
+            bool run = true;
+            int mul_count = 0;
+            Dictionary<string, Int64> regs = new Dictionary<string, Int64>();
+            foreach (string ins in input)
+            {
+                string[] line = ins.Split(delims, StringSplitOptions.RemoveEmptyEntries);
+                if (Char.IsLetter(line[1][0]) && !regs.Keys.Contains(line[1]))
+                    regs.Add(line[1], 0);
+            }
+            regs["a"] = 1;
+            while (run)
+            {
+                string[] line;
+                if (pointer0 >= input.Length)
+                {
+                    run = false;
+                    continue;
+                }
+                line = input[pointer0].Split(delims, StringSplitOptions.RemoveEmptyEntries);
+                switch (line[0])
+                {
+                    case "set":
+                        if (char.IsLetter(line[2][0]))
+                            regs[line[1]] = regs[line[2]];
+                        else
+                            regs[line[1]] = Int64.Parse(line[2]);
+                        break;
+                    case "sub":
+                        if (char.IsLetter(line[2][0]))
+                            regs[line[1]] -= regs[line[2]];
+                        else
+                            regs[line[1]] -= Int64.Parse(line[2]);
+                        break;
+                    case "mul":
+                        mul_count++;
+                        if (char.IsLetter(line[2][0]))
+                            regs[line[1]] *= regs[line[2]];
+                        else
+                            regs[line[1]] *= Int64.Parse(line[2]);
+                        break;
+                    case "jnz":
+                        if (char.IsLetter(line[1][0]))
+                        {
+                            if (char.IsLetter(line[2][0]))
+                            {
+                                if (regs[line[1]] != 0)
+                                    pointer0 += (int)(regs[line[2]] - 1);
+                            }
+                            else
+                            {
+                                if (regs[line[1]] != 0)
+                                    pointer0 += (int.Parse(line[2]) - 1);
+                            }
+                        }
+                        else
+                        {
+                            if (char.IsLetter(line[2][0]))
+                            {
+                                if (int.Parse(line[1]) != 0)
+                                    pointer0 += (int)(regs[line[2]] - 1);
+                            }
+                            else
+                            {
+                                if (int.Parse(line[1]) != 0)
+                                    pointer0 += (int.Parse(line[2]) - 1);
+                            }
+                        }
+                        break;
+                }
+                pointer0++;
+            }
+            
+            int h = 0;
+            int b = 105700;
+            while (true)
+            {
+                int f = 1;
+                int d = 2;
+                do
+                {
+                    int e = 2;
+                    do
+                    {
+                        if ((d * e) == b)
+                            f = 0;
+                        e++;
+                    } while (e != b);
+                    d++;
+                } while (d != b);
+                if (f == 0)
+                    h++;
+                if (b != 122700)
+                    b += 17;
+                else
+                    break;
+            }
+            
+
+
+
+            Console.WriteLine("Day 23, Problem 1: " + mul_count);
             Console.WriteLine("Day 23, Problem 2: ");
         }
 

@@ -62,6 +62,10 @@
     <Content Include="problem19.txt" />
     <Content Include="problem20.txt" />
     <Content Include="problem21.txt" />
+    <Content Include="problem22.txt" />
+    <Content Include="problem23.txt" />
+    <Content Include="problem24.txt" />
+    <Content Include="problem25.txt" />
     <Content Include="problem3.txt" />
     <Content Include="problem2.txt" />
     <Content Include="problem4.txt" />
