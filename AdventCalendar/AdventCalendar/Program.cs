@@ -29,8 +29,8 @@ namespace AdventCalendar
             //Problem16(@"..\..\problem16.txt");
             //Problem17(@"..\..\problem17.txt");
             //Problem18(@"..\..\problem18.txt");
-            Problem19(@"..\..\problem19.txt");
-            Problem20(@"..\..\problem20.txt");
+            //Problem19(@"..\..\problem19.txt");
+            //Problem20(@"..\..\problem20.txt");
             Problem21(@"..\..\problem21.txt");
             Problem22(@"..\..\problem22.txt");
             Problem23(@"..\..\problem23.txt");
@@ -1293,7 +1293,7 @@ namespace AdventCalendar
                 {
                     regs0.Add(line[1], 0);
                     regs1.Add(line[1], 0);
-                }                    
+                }
             }
             regs1["p"] = 1;
             while (run)
@@ -1341,7 +1341,7 @@ namespace AdventCalendar
                             {
                                 curr_prog = 1;
                                 pointer0--;
-                            }                                
+                            }
                             else
                                 regs0[line[1]] = queue0.Dequeue();
                             break;
@@ -1456,7 +1456,7 @@ namespace AdventCalendar
                 }
             }
             Console.WriteLine("Day 18, Problem 1: " + last_sound);
-            Console.WriteLine("Day 18, Problem 2: "+ prog1_send);
+            Console.WriteLine("Day 18, Problem 2: " + prog1_send);
         }
 
         /* Day 19
@@ -1464,8 +1464,138 @@ namespace AdventCalendar
          */
         static void Problem19(string __input)
         {
-            Console.WriteLine("Day 19, Problem 1: ");
-            Console.WriteLine("Day 19, Problem 2: ");
+            string[] input = File.ReadAllLines(__input);
+            List<List<char>> map = new List<List<char>>();
+            string letters = "";
+            int x = 0;
+            int y = 0;
+            string dir = "down";
+            int steps = 0;
+            for (int i = 0; i < input.Length; i++)
+            {
+                map.Add(new List<char>());
+                map[i].AddRange(input[i].ToCharArray());
+            }
+            for (int i = 0; i < map[0].Count; i++)
+            {
+                if (map[0][i].Equals('|'))
+                {
+                    y = i;
+                    break;
+                }
+            }
+            while (true)
+            {
+                if (map[x][y].Equals(' '))
+                    break;
+                else if (dir.Equals("down") && map[x][y].Equals('|'))
+                {
+                    x++;
+                }
+                else if (dir.Equals("down") && map[x][y].Equals('-'))
+                {
+                    x++;
+                }
+                else if (dir.Equals("down") && map[x][y].Equals('+'))
+                {
+                    if (!map[x][y - 1].Equals(' '))
+                    {
+                        dir = "left";
+                        y--;
+                    }
+                    else if (!map[x][y + 1].Equals(' '))
+                    {
+                        dir = "right";
+                        y++;
+                    }
+                }
+                else if (dir.Equals("down") && Char.IsLetter(map[x][y]))
+                {
+                    letters += map[x][y].ToString();
+                    x++;
+                }
+                else if (dir.Equals("up") && map[x][y].Equals('|'))
+                {
+                    x--;
+                }
+                else if (dir.Equals("up") && map[x][y].Equals('-'))
+                {
+                    x--;
+                }
+                else if (dir.Equals("up") && map[x][y].Equals('+'))
+                {
+                    if (!map[x][y - 1].Equals(' '))
+                    {
+                        dir = "left";
+                        y--;
+                    }
+                    else if (!map[x][y + 1].Equals(' '))
+                    {
+                        dir = "right";
+                        y++;
+                    }
+                }
+                else if (dir.Equals("up") && Char.IsLetter(map[x][y]))
+                {
+                    letters += map[x][y].ToString();
+                    x--;
+                }
+                else if (dir.Equals("left") && map[x][y].Equals('|'))
+                {
+                    y--;
+                }
+                else if (dir.Equals("left") && map[x][y].Equals('-'))
+                {
+                    y--;
+                }
+                else if (dir.Equals("left") && map[x][y].Equals('+'))
+                {
+                    if (!map[x - 1][y].Equals(' '))
+                    {
+                        dir = "up";
+                        x--;
+                    }
+                    else if (!map[x + 1][y].Equals(' '))
+                    {
+                        dir = "down";
+                        x++;
+                    }
+                }
+                else if (dir.Equals("left") && Char.IsLetter(map[x][y]))
+                {
+                    letters += map[x][y].ToString();
+                    y--;
+                }
+                else if (dir.Equals("right") && map[x][y].Equals('|'))
+                {
+                    y++;
+                }
+                else if (dir.Equals("right") && map[x][y].Equals('-'))
+                {
+                    y++;
+                }
+                else if (dir.Equals("right") && map[x][y].Equals('+'))
+                {
+                    if (!map[x - 1][y].Equals(' '))
+                    {
+                        dir = "up";
+                        x--;
+                    }
+                    else if (!map[x + 1][y].Equals(' '))
+                    {
+                        dir = "down";
+                        x++;
+                    }
+                }
+                else if (dir.Equals("right") && Char.IsLetter(map[x][y]))
+                {
+                    letters += map[x][y].ToString();
+                    y++;
+                }
+                steps++;
+            }
+            Console.WriteLine("Day 19, Problem 1: " + letters);
+            Console.WriteLine("Day 19, Problem 2: " + steps);
         }
 
         /* Day 20
@@ -1473,8 +1603,80 @@ namespace AdventCalendar
          */
         static void Problem20(string __input)
         {
-            Console.WriteLine("Day 20, Problem 1: ");
-            Console.WriteLine("Day 20, Problem 2: ");
+            string[] input = File.ReadAllLines(__input);
+            char[] delims = { ',', ' ', '=', '<', '>', 'p', 'v', 'a' };
+            List<List<Int64>> particles = new List<List<Int64>>();
+            foreach (string line in input)
+            {
+                particles.Add(new List<Int64>());
+                string[] s = line.Split(delims, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string p in s)
+                    particles[particles.Count - 1].Add(Int64.Parse(p));
+            }
+            for (int i = 0; i < 10000; i++)
+            {
+                for (int j = 0; j < particles.Count; j++)
+                {
+                    particles[j][3] += particles[j][6];
+                    particles[j][4] += particles[j][7];
+                    particles[j][5] += particles[j][8];
+                    particles[j][0] += particles[j][3];
+                    particles[j][1] += particles[j][4];
+                    particles[j][2] += particles[j][5];
+
+                }
+            }
+            Int64 distance = Int64.MaxValue;
+            int particle = -1;
+            for (int j = 0; j < particles.Count; j++)
+            {
+                Int64 dist = Math.Abs(particles[j][0]) + Math.Abs(particles[j][1]) + Math.Abs(particles[j][2]);
+                if (dist < distance)
+                {
+                    distance = dist;
+                    particle = j;
+                }
+            }
+            particles = new List<List<Int64>>();
+            foreach (string line in input)
+            {
+                particles.Add(new List<Int64>());
+                string[] s = line.Split(delims, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string p in s)
+                    particles[particles.Count - 1].Add(Int64.Parse(p));
+            }
+            for (int i = 0; i < 10000; i++)
+            {
+                Dictionary<string, int> d = new Dictionary<string, int>();
+                for (int j = 0; j < particles.Count; j++)
+                {
+                    if (particles[j] == null)
+                        continue;
+                    particles[j][3] += particles[j][6];
+                    particles[j][4] += particles[j][7];
+                    particles[j][5] += particles[j][8];
+                    particles[j][0] += particles[j][3];
+                    particles[j][1] += particles[j][4];
+                    particles[j][2] += particles[j][5];
+                    if (d.ContainsKey(particles[j][0].ToString() + "," + particles[j][1].ToString() + "," + particles[j][2].ToString()))
+                    {
+                        particles[d[particles[j][0].ToString() + "," + particles[j][1].ToString() + "," + particles[j][2].ToString()]] = null;
+                        particles[j] = null;
+                    }
+                    else
+                    {
+                        d.Add(particles[j][0].ToString() + "," + particles[j][1].ToString() + "," + particles[j][2].ToString(), j);
+                    }
+                }
+            }
+            int count = 0;
+            foreach (var p in particles)
+            {
+                if (p != null)
+                    count++;
+            }
+            Console.WriteLine("Day 20, Problem 1: " + particle);
+            Console.WriteLine("Day 20, Problem 2: " + count);
         }
 
         /* Day 21
@@ -1482,6 +1684,7 @@ namespace AdventCalendar
          */
         static void Problem21(string __input)
         {
+            string[] input = File.ReadAllLines(__input);
             Console.WriteLine("Day 21, Problem 1: ");
             Console.WriteLine("Day 21, Problem 2: ");
         }
