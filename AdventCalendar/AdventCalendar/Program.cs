@@ -11,31 +11,31 @@ namespace AdventCalendar
     {
         static void Main(string[] args)
         {
-            //Problem1(@"..\..\problem1.txt");
-            //Problem2(@"..\..\problem2.txt");
-            //Problem3(@"..\..\problem3.txt");
-            //Problem4(@"..\..\problem4.txt");
-            //Problem5(@"..\..\problem5.txt");
-            //Problem6(@"..\..\problem6.txt");
-            //Problem7(@"..\..\problem7.txt");
-            //Problem8(@"../../problem8.txt");
-            //Problem9(@"..\..\problem9.txt");
-            //Problem10(@"..\..\problem10.txt");
-            //Problem11(@"..\..\problem11.txt");
-            //Problem12(@"..\..\problem12.txt");
-            //Problem13(@"..\..\problem13.txt");
-            //Problem14(@"..\..\problem14.txt");
-            //Problem15(@"..\..\problem15.txt");
-            //Problem16(@"..\..\problem16.txt");
-            //Problem17(@"..\..\problem17.txt");
-            //Problem18(@"..\..\problem18.txt");
-            //Problem19(@"..\..\problem19.txt");
-            //Problem20(@"..\..\problem20.txt");
+            Problem1(@"..\..\problem1.txt");
+            Problem2(@"..\..\problem2.txt");
+            Problem3(@"..\..\problem3.txt");
+            Problem4(@"..\..\problem4.txt");
+            Problem5(@"..\..\problem5.txt");
+            Problem6(@"..\..\problem6.txt");
+            Problem7(@"..\..\problem7.txt");
+            Problem8(@"../../problem8.txt");
+            Problem9(@"..\..\problem9.txt");
+            Problem10(@"..\..\problem10.txt");
+            Problem11(@"..\..\problem11.txt");
+            Problem12(@"..\..\problem12.txt");
+            Problem13(@"..\..\problem13.txt");
+            Problem14(@"..\..\problem14.txt");
+            Problem15(@"..\..\problem15.txt");
+            Problem16(@"..\..\problem16.txt");
+            Problem17(@"..\..\problem17.txt");
+            Problem18(@"..\..\problem18.txt");
+            Problem19(@"..\..\problem19.txt");
+            Problem20(@"..\..\problem20.txt");
             Problem21(@"..\..\problem21.txt");
-            //Problem22(@"..\..\problem22.txt");
-            //Problem23(@"..\..\problem23.txt");
-            //Problem24(@"..\..\problem24.txt");
-            //Problem25(@"..\..\problem25.txt");
+            Problem22(@"..\..\problem22.txt");
+            Problem23(@"..\..\problem23.txt");
+            Problem24(@"..\..\problem24.txt");
+            Problem25(@"..\..\problem25.txt");
             Console.ReadLine();
         }
 
