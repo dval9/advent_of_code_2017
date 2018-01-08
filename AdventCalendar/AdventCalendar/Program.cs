@@ -34,8 +34,8 @@ namespace AdventCalendar
             Problem21(@"..\..\problem21.txt");
             //Problem22(@"..\..\problem22.txt");
             //Problem23(@"..\..\problem23.txt");
-            Problem24(@"..\..\problem24.txt");
-            Problem25(@"..\..\problem25.txt");
+            //Problem24(@"..\..\problem24.txt");
+            //Problem25(@"..\..\problem25.txt");
             Console.ReadLine();
         }
 
@@ -1685,9 +1685,163 @@ namespace AdventCalendar
         static void Problem21(string __input)
         {
             string[] input = File.ReadAllLines(__input);
-            Console.WriteLine("Day 21, Problem 1: ");
-            Console.WriteLine("Day 21, Problem 2: ");
+            Dictionary<string, string> rules = new Dictionary<string, string>();
+            foreach (string line in input)
+            {
+                string[] s = line.Split(new string[] { " => " }, StringSplitOptions.RemoveEmptyEntries);
+                if (!rules.ContainsKey(s[0]))
+                    rules.Add(s[0], s[1]);
+                if (!rules.ContainsKey(FlipHorizontal(s[0])))
+                    rules.Add(FlipHorizontal(s[0]), s[1]);
+                if (!rules.ContainsKey(FlipVertical(s[0])))
+                    rules.Add(FlipVertical(s[0]), s[1]);
+                for (int i = 0; i < 3; i++)
+                {
+                    var newFrom = Rotate(s[0]);
+                    if (!rules.ContainsKey(newFrom))
+                        rules.Add(newFrom, s[1]);
+                    if (!rules.ContainsKey(FlipHorizontal(newFrom)))
+                        rules.Add(FlipHorizontal(newFrom), s[1]);
+                    if (!rules.ContainsKey(FlipVertical(newFrom)))
+                        rules.Add(FlipVertical(newFrom), s[1]);
+                    s[0] = newFrom;
+                }
+            }
+            string[] grid = new string[]
+            {
+            ".#.",
+            "..#",
+            "###",
+            };
+            grid = Enhance(5, grid, rules);
+            int answer1 = CountOn(grid);
+            grid = new string[]
+            {
+            ".#.",
+            "..#",
+            "###",
+            };
+            grid = Enhance(18, grid, rules);
+            int answer2 = CountOn(grid);
+            Console.WriteLine("Day 21, Problem 1: " + answer1);
+            Console.WriteLine("Day 21, Problem 2: " + answer2);
         }
+
+        public static string FlipHorizontal(string grid)
+        {
+            string[] rows = grid.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] newRows = new string[rows.Length];
+            for (int i = 0; i < rows.Length; i++)
+                newRows[i] = string.Join("", rows[i].Reverse());
+            return string.Join<string>("/", newRows);
+        }
+
+        public static string FlipVertical(string grid)
+        {
+            string[] rows = grid.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] newRows = new string[rows.Length];
+            for (int i = 0; i < rows.Length; i++)
+                newRows[rows.Length - i - 1] = rows[i];
+            return string.Join<string>("/", newRows);
+        }
+
+        public static string Rotate(string grid)
+        {
+            string[] rows = grid.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+            char[,] newRows = new char[rows.Length, rows.Length];
+            for (int i = 0; i < rows.Length; i++)
+            {
+                for (int j = 0; j < rows.Length; j++)
+                    newRows[rows.Length - j - 1, i] = rows[i][j];
+            }
+            string[] sNewRows = new string[rows.Length];
+            for (int i = 0; i < rows.Length; i++)
+            {
+                for (int j = 0; j < rows.Length; j++)
+                    sNewRows[i] += newRows[i, j];
+            }
+            string result = string.Join("/", sNewRows);
+            return result;
+        }
+
+        public static string CopyFrom(string[] grid, int startRow, int startColumn, int num)
+        {
+            string[] section = new string[num];
+            for (int i = 0; i < num; i++)
+            {
+                for (int j = 0; j < num; j++)
+                    section[i] += grid[i + startRow][j + startColumn];
+            }
+            return string.Join("/", section);
+        }
+
+        public static void CopyTo(string[] grid, string section, int size, int startRow, int startColumn)
+        {
+            string[] rows = section.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                    grid[startRow + i] += rows[i][j];
+            }
+        }
+
+        public static string[] EnhanceStep(string[] grid, Dictionary<string, string> rules, int size)
+        {
+            int newSize = size + 1;
+            string[] newGrid = new string[grid.Length / size * newSize];
+            for (int j = 0; j * size < grid.Length; j++)
+            {
+                for (int k = 0; k * size < grid.Length; k++)
+                {
+                    string section = CopyFrom(grid, j * size, k * size, size);
+                    CopyTo(newGrid, rules[section], newSize, j * newSize, k * newSize);
+                }
+            }
+            return newGrid;
+        }
+
+        public static string[] Enhance(int iterations, string[] grid, Dictionary<string, string> rules)
+        {
+            for (int i = 0; i < iterations; i++)
+            {
+                if (grid.Length % 2 == 0)
+                    grid = EnhanceStep(grid, rules, size: 2);
+                else
+                    grid = EnhanceStep(grid, rules, size: 3);
+            }
+            return grid;
+        }
+
+        public static int CountOn(string[] grid)
+        {
+            int countOn = 0;
+            for (int i = 0; i < grid.Length; i++)
+            {
+                for (int j = 0; j < grid.Length; j++)
+                {
+                    if (grid[i][j] == '#')
+                        countOn++;
+                }
+            }
+            return countOn;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         /* Day 22
          * 
@@ -1957,9 +2111,33 @@ namespace AdventCalendar
         static void Problem24(string __input)
         {
             List<string> input = File.ReadAllLines(__input).ToList();
+            List<Tuple<int, int>> c = new List<Tuple<int, int>>();
+            foreach (string line in input)
+            {
+                c.Add(new Tuple<int, int>(int.Parse(line.Split('/')[0]), int.Parse(line.Split('/')[1])));
+            }
+            int score1 = Build(new Tuple<int, int>(0, 0), 0, c, false).Item1;
+            int score2 = Build(new Tuple<int, int>(0, 0), 0, c, true).Item1;
 
-            Console.WriteLine("Day 24, Problem 1: ");
-            Console.WriteLine("Day 24, Problem 2: ");
+            Console.WriteLine("Day 24, Problem 1: " + score1);
+            Console.WriteLine("Day 24, Problem 2: " + score2);
+        }
+
+        static Tuple<int, int> Build(Tuple<int, int> Bridge, int port, List<Tuple<int, int>> available, bool useLength)
+        {
+            var usable = available.Where(x => x.Item1 == port || x.Item2 == port).ToList();
+            if (!usable.Any()) return Bridge;
+            var bridges = new List<Tuple<int, int>>();
+            foreach (Tuple<int, int> c in usable)
+            {
+                var score = Bridge.Item1 + c.Item1 + c.Item2;
+                var len = Bridge.Item2 + 1;
+                var nextPort = port == c.Item1 ? c.Item2 : c.Item1;
+                var remaining = available.ToList();
+                remaining.Remove(c);
+                bridges.Add(Build(new Tuple<int, int>(score, len), nextPort, remaining, useLength));
+            }
+            return bridges.OrderBy(x => useLength ? x.Item2 : 0).ThenBy(x => x.Item1).Last();
         }
 
         /* Day 25
@@ -1967,7 +2145,109 @@ namespace AdventCalendar
          */
         static void Problem25(string __input)
         {
-            Console.WriteLine("Day 25, Problem 1: ");
+            List<int> tape = new List<int>();
+            for (int i = 0; i < 12386363 / 4; i++)
+            {
+                tape.Add(0);
+            }
+            char state = 'A';
+            int pointer = tape.Count / 2;
+            for (int i = 0; i < 12386363; i++)
+            {
+                switch (state)
+                {
+                    case 'A':
+                        if (tape[pointer] == 0)
+                        {
+                            tape[pointer] = 1;
+                            pointer++;
+                            state = 'B';
+                        }
+                        else
+                        {
+                            tape[pointer] = 0;
+                            pointer--;
+                            state = 'E';
+                        }
+                        break;
+                    case 'B':
+                        if (tape[pointer] == 0)
+                        {
+                            tape[pointer] = 1;
+                            pointer--;
+                            state = 'C';
+                        }
+                        else
+                        {
+                            tape[pointer] = 0;
+                            pointer++;
+                            state = 'A';
+                        }
+                        break;
+                    case 'C':
+                        if (tape[pointer] == 0)
+                        {
+                            tape[pointer] = 1;
+                            pointer--;
+                            state = 'D';
+                        }
+                        else
+                        {
+                            tape[pointer] = 0;
+                            pointer++;
+                            state = 'C';
+                        }
+                        break;
+                    case 'D':
+                        if (tape[pointer] == 0)
+                        {
+                            tape[pointer] = 1;
+                            pointer--;
+                            state = 'E';
+                        }
+                        else
+                        {
+                            tape[pointer] = 0;
+                            pointer--;
+                            state = 'F';
+                        }
+                        break;
+                    case 'E':
+                        if (tape[pointer] == 0)
+                        {
+                            tape[pointer] = 1;
+                            pointer--;
+                            state = 'A';
+                        }
+                        else
+                        {
+                            tape[pointer] = 1;
+                            pointer--;
+                            state = 'C';
+                        }
+                        break;
+                    case 'F':
+                        if (tape[pointer] == 0)
+                        {
+                            tape[pointer] = 1;
+                            pointer--;
+                            state = 'E';
+                        }
+                        else
+                        {
+                            tape[pointer] = 1;
+                            pointer++;
+                            state = 'A';
+                        }
+                        break;
+                }
+            }
+            int score = 0;
+            foreach (int i in tape)
+            {
+                score += i;
+            }
+            Console.WriteLine("Day 25, Problem 1: " + score);
             Console.WriteLine("Day 25, Problem 2: ");
         }
     }
