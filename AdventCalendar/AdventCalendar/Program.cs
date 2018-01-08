@@ -1957,7 +1957,6 @@ namespace AdventCalendar
         static void Problem24(string __input)
         {
             List<string> input = File.ReadAllLines(__input).ToList();
-            System.Collections.Immutable.IImmutableList<(int, int)> edges = System.Collections.Immutable.ImmutableList<(int, int)>.Empty;
 
             Console.WriteLine("Day 24, Problem 1: ");
             Console.WriteLine("Day 24, Problem 2: ");
