@@ -1843,7 +1843,6 @@ namespace AdventCalendar
                 if (Char.IsLetter(line[1][0]) && !regs.Keys.Contains(line[1]))
                     regs.Add(line[1], 0);
             }
-            regs["a"] = 1;
             while (run)
             {
                 string[] line;
@@ -1905,37 +1904,51 @@ namespace AdventCalendar
                 }
                 pointer0++;
             }
-            
+
+            //original assembly translation
             int h = 0;
-            int b = 105700;
-            while (true)
+            //int b = 105700;
+            //while (true)
+            //{
+            //    int f = 1;
+            //    int d = 2;
+            //    do
+            //    {
+            //        int e = 2;
+            //        do
+            //        {
+            //            if ((d * e) == b)
+            //                f = 0;
+            //            e++;
+            //        } while (e != b);
+            //        d++;
+            //    } while (d != b);
+            //    if (f == 0)
+            //        h++;
+            //    if (b != 122700)
+            //        b += 17;
+            //    else
+            //        break;
+            //}
+            //as a better algorithm
+            for (int i = 105700; i <= 122700; i += 17)
             {
-                int f = 1;
-                int d = 2;
-                do
+                for (int k = 0; k < 100; k++)
                 {
-                    int e = 2;
-                    do
+                    Random r = new Random(i);
+                    System.Numerics.BigInteger a = new System.Numerics.BigInteger(r.Next(2, i));
+                    System.Numerics.BigInteger n = new System.Numerics.BigInteger(i);
+                    System.Numerics.BigInteger p = System.Numerics.BigInteger.ModPow(a, n - 1, n);
+                    if (p != 1)
                     {
-                        if ((d * e) == b)
-                            f = 0;
-                        e++;
-                    } while (e != b);
-                    d++;
-                } while (d != b);
-                if (f == 0)
-                    h++;
-                if (b != 122700)
-                    b += 17;
-                else
-                    break;
+                        h++;
+                        break;
+                    }
+                }
             }
-            
-
-
 
             Console.WriteLine("Day 23, Problem 1: " + mul_count);
-            Console.WriteLine("Day 23, Problem 2: ");
+            Console.WriteLine("Day 23, Problem 2: " + h);
         }
 
         /* Day 24
@@ -1943,6 +1956,7 @@ namespace AdventCalendar
          */
         static void Problem24(string __input)
         {
+            string[] input = File.ReadAllLines(__input);
             Console.WriteLine("Day 24, Problem 1: ");
             Console.WriteLine("Day 24, Problem 2: ");
         }
