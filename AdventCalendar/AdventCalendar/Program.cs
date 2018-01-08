@@ -33,7 +33,7 @@ namespace AdventCalendar
             //Problem20(@"..\..\problem20.txt");
             Problem21(@"..\..\problem21.txt");
             //Problem22(@"..\..\problem22.txt");
-            Problem23(@"..\..\problem23.txt");
+            //Problem23(@"..\..\problem23.txt");
             Problem24(@"..\..\problem24.txt");
             Problem25(@"..\..\problem25.txt");
             Console.ReadLine();
@@ -1956,7 +1956,8 @@ namespace AdventCalendar
          */
         static void Problem24(string __input)
         {
-            string[] input = File.ReadAllLines(__input);
+            List<string> input = File.ReadAllLines(__input).ToList();
+            System.Collections.
             Console.WriteLine("Day 24, Problem 1: ");
             Console.WriteLine("Day 24, Problem 2: ");
         }
